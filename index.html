@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>/* GENERAL STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e1e1e, #121212);
+            color: white;
+            overflow: hidden;
+        }
+        
+        /* CONTAINER */
+        .container {
+            display: flex;
+            height: 90%;
+        }
+        
+        /* SIDEBAR */
+        .sidebar {
+            width: 20%;
+            background-color: #181818;
+            padding: 20px;
+            transition: transform 0.4s ease-in-out;
+        }
+        
+        .sidebar ul li {
+            padding: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s, transform 0.3s;
+        }
+        
+        .sidebar ul li:hover, .sidebar ul li.active {
+            background-color: #282828;
+            border-radius: 8px;
+            transform: scale(1.05);
+        }
+        
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        .songs-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        /* SONG CARD ANIMATIONS */
+        .song {
+            background-color: #282828;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s;
+            animation: slideUp 0.5s ease-in-out forwards;
+            opacity: 0;
+        }
+        
+        .song:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+        .song:nth-child(even) {
+            animation-delay: 0.4s;
+        }
+        
+        .song:hover {
+            background-color: #383838;
+            transform: scale(1.1);
+        }
+        
+        .song img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        
+        /* PLAYER */
+        .player {
+            width: 100%;
+            height: 12%;
+            background-color: #181818;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            animation: slideUp 0.8s ease-in-out;
+        }
+        
+        .controls button, #add-to-playlist {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease, color 0.3s;
+        }
+        
+        .controls button:hover, #add-to-playlist:hover {
+            transform: scale(1.2);
+            color: #1db954;
+        }
+        
+        /* PLAYLIST ANIMATION */
+        .playlist-list p {
+            animation: popIn 0.5s ease-out;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes popIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2><i class="fa fa-spotify"></i> Spotify </h2>
+            <ul>
+                <li class="active" onclick="showSection('home')"><i class="fa fa-home"></i> Home</li>
+                <li onclick="showSection('search')"><i class="fa fa-search"></i> Search</li>
+                <li onclick="showSection('library')"><i class="fa fa-music"></i> Your Library</li>
+                <li onclick="showSection('playlist')"><i class="fa fa-plus"></i> Create Playlist</li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <section id="home" class="content-section">
+                <h1>Top Hits</h1>
+                <input type="text" id="search-bar" placeholder="Search songs..." onkeyup="searchSongs()">
+                <div class="songs-list"></div>
+            </section>
+
+            <section id="search" class="content-section hidden">
+                <h1>Search Songs</h1>
+                <p>Use the search bar above to find your favorite songs.</p>
+            </section>
+
+            <section id="library" class="content-section hidden">
+                <h1>Your Library</h1>
+                <p>Your saved songs will appear here.</p>
+            </section>
+
+            <section id="playlist" class="content-section hidden">
+                <h1>Your Playlist</h1>
+                <div class="playlist-list"></div>
+            </section>
+        </main>
+
+        <div class="player">
+            <img id="cover" src="covers/default.jpg" alt="Song Cover">
+            <div class="song-info">
+                <h3 id="title">Song Title</h3>
+                <p id="artist">Artist Name</p>
+            </div>
+            <span id="current-time">0:00</span>
+            <input type="range" id="progress" value="0">
+            <span id="duration">0:00</span>
+            <div class="controls">
+                <button id="prev"><i class="fa fa-backward"></i></button>
+                <button id="play"><i class="fa fa-play"></i></button>
+                <button id="next"><i class="fa fa-forward"></i></button>
+            </div>
+            <button id="add-to-playlist"><i class="fa fa-plus"></i> Add to Playlist</button>
+        </div>
+    </div>
+</body>
+</html>
