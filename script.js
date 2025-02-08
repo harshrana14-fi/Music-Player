@@ -3,6 +3,7 @@ const songs = [
     { title: "Shape of You", artist: "Ed Sheeran", src: "Shape Of You - Ed Sheeran - Copy.mp3", cover: "https://tse2.mm.bing.net/th?id=OIP.J-z8JrhX2EhcIfugldA8sQHaHa&pid=Api&P=0&h=220" },
     { title: "Levitating", artist: "Dua Lipa", src: "y2mate.com - 和訳Dua LipaLevitating feat DaBaby公式_360p - Copy.mp4", cover: "https://tse2.mm.bing.net/th?id=OIP.FKpRZjNNf7KGGDVdrcKWnAHaJQ&pid=Api&P=0&h=220" },
     { title: "Senorita", artist: "Shawn Mendes, Camila Cabello", src: "Camila Cabello & Shawn Mendes - Señorita.mp3", cover: "https://tse2.mm.bing.net/th?id=OIP.TiFFnktrrs-w7sLCg8u_NwHaEK&pid=Api&P=0&h=220" },
+   { title: "Someone like You", artist: "Adele", src: "11SomeoneLikeYou.mp3", cover: "https://tse2.mm.bing.net/th?id=OIP.sDgJbK124MYcI6t7ZD_6_AHaEK&pid=Api&P=0&h=220" },
 ];
 
 let currentIndex = 0;
