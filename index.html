@@ -8,165 +8,132 @@
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-    <style>/* GENERAL STYLES */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background: linear-gradient(135deg, #1e1e1e, #121212);
-            color: white;
-            overflow: hidden;
-        }
-        
-        /* CONTAINER */
-        .container {
-            display: flex;
-            height: 90%;
-        }
-        
-        /* SIDEBAR */
-        .sidebar {
-            width: 20%;
-            background-color: #181818;
-            padding: 20px;
-            transition: transform 0.4s ease-in-out;
-        }
-        
-        .sidebar ul li {
-            padding: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: background 0.3s, transform 0.3s;
-        }
-        
-        .sidebar ul li:hover, .sidebar ul li.active {
-            background-color: #282828;
-            border-radius: 8px;
-            transform: scale(1.05);
-        }
-        
-        /* MAIN CONTENT */
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            animation: fadeIn 0.8s ease-in-out;
-        }
-        
-        .songs-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-        }
-        
-        /* SONG CARD ANIMATIONS */
-        .song {
-            background-color: #282828;
-            padding: 10px;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease, background 0.3s;
-            animation: slideUp 0.5s ease-in-out forwards;
-            opacity: 0;
-        }
-        
-        .song:nth-child(odd) {
-            animation-delay: 0.2s;
-        }
-        .song:nth-child(even) {
-            animation-delay: 0.4s;
-        }
-        
-        .song:hover {
-            background-color: #383838;
-            transform: scale(1.1);
-        }
-        
-        .song img {
-            width: 100%;
-            border-radius: 8px;
-        }
-        
-        /* PLAYER */
-        .player {
-            width: 100%;
-            height: 12%;
-            background-color: #181818;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            position: fixed;
-            bottom: 0;
-            animation: slideUp 0.8s ease-in-out;
-        }
-        
-        .controls button, #add-to-playlist {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            transition: transform 0.3s ease, color 0.3s;
-        }
-        
-        .controls button:hover, #add-to-playlist:hover {
-            transform: scale(1.2);
-            color: #1db954;
-        }
-        
-        /* PLAYLIST ANIMATION */
-        .playlist-list p {
-            animation: popIn 0.5s ease-out;
-        }
-        
-        /* ANIMATIONS */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes popIn {
-            from {
-                transform: scale(0.5);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-        .hidden {
-            display: none;
-        }
+    <style>    /* GENERAL STYLES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(135deg, #1e1e1e, #121212);
+    color: white;
+    overflow: hidden;
+}
+
+/* CONTAINER */
+.container {
+    display: flex;
+    height: 90%;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 20%;
+    background-color: #181818;
+    padding: 20px;
+    transition: transform 0.4s ease-in-out;
+}
+
+/* Hide Sidebar on Mobile */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60%;
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100vh;
+        z-index: 10;
+        transition: left 0.3s ease-in-out;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .sidebar ul li {
+        padding: 15px;
+        font-size: 18px;
+    }
+
+    /* Sidebar Toggle Button */
+    .menu-toggle {
+        display: block;
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        font-size: 25px;
+        cursor: pointer;
+        z-index: 20;
+    }
+}
+
+/* MAIN CONTENT */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* SONG LIST GRID - Adjust for Mobile */
+.songs-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .songs-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}
+
+/* PLAYER */
+.player {
+    width: 100%;
+    height: 12%;
+    background-color: #181818;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+}
+
+/* Adjust Player for Mobile */
+@media (max-width: 768px) {
+    .player {
+        flex-direction: column;
+        height: auto;
+        padding: 5px;
+    }
+
+    .song-info {
+        text-align: center;
+    }
+
+    .controls {
+        display: flex;
+        gap: 10px;
+        margin-top: 5px;
+    }
+
+    #progress {
+        width: 90%;
+    }
+}
+
+/* Hide Elements on Small Screens */
+.hidden {
+    display: none;
+}
+
+           
         </style>
 </head>
 <body>
